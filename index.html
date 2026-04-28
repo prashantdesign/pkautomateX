@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PKAutomateX | Pro Admin</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-hover: #4f46e5;
+            --bg: #f8fafc;
+            --surface: #ffffff;
+            --text-main: #0f172a;
+            --text-dim: #64748b;
+            --border: #e2e8f0;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); color: var(--text-main); -webkit-font-smoothing: antialiased; }
+
+        /* Navigation */
+        nav {
+            background: var(--surface);
+            padding: 1rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+        }
+
+        .logo { font-weight: 800; font-size: 1.25rem; color: var(--primary); letter-spacing: -0.05em; display: flex; align-items: center; gap: 0.5rem; }
+        .logo span { color: var(--text-main); }
+
+        .nav-actions { display: flex; gap: 1rem; }
+        .btn-icon { background: var(--bg); border: 1px solid var(--border); padding: 0.5rem; border-radius: 8px; cursor: pointer; }
+
+        /* Main Layout */
+        .container { max-width: 1000px; margin: 0 auto; padding: 1.5rem; }
+
+        /* Banner */
+        #notif-banner {
+            background: linear-gradient(135deg, var(--primary), #818cf8);
+            color: white;
+            padding: 1rem;
+            border-radius: 12px;
+            margin-bottom: 1.5rem;
+            display: none;
+            cursor: pointer;
+            font-weight: 600;
+            text-align: center;
+            box-shadow: 0 10px 15px -3px rgba(99, 102, 241, 0.3);
+        }
+
+        /* Stats Cards */
+        .grid-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin-bottom: 2rem; }
+        .stat-card {
+            background: var(--surface);
+            padding: 1.5rem;
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02);
+        }
+        .stat-card small { color: var(--text-dim); font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
+        .stat-card div { font-size: 1.75rem; font-weight: 800; margin-top: 0.5rem; color: var(--text-main); }
+
+        /* Tabs */
+        .tabs { display: flex; gap: 1rem; margin-bottom: 1.5rem; overflow-x: auto; padding-bottom: 0.5rem; }
+        .tab-btn {
+            padding: 0.75rem 1.25rem;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            font-weight: 600;
+            font-size: 0.875rem;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.2s;
+        }
+        .tab-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
+
+        /* Dashboard Content */
+        .content-section { display: none; }
+        .content-section.active { display: block; }
+
+        /* Activity List */
+        .card-list { display: grid; gap: 1rem; }
+        .item-card {
+            background: var(--surface);
+            padding: 1.25rem;
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            transition: all 0.2s;
+        }
+        .item-card:hover { border-color: var(--primary); transform: translateY(-2px); }
+
+        .icon-circle {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            background: var(--bg);
+        }
+
+        .item-info { flex: 1; }
+        .item-info h4 { font-size: 0.95rem; font-weight: 700; color: var(--text-main); }
+        .item-info p { font-size: 0.8rem; color: var(--text-dim); margin-top: 0.25rem; }
+
+        .item-meta { text-align: right; }
+        .item-meta .badge {
+            background: #f1f5f9;
+            color: var(--text-main);
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+        .item-meta .time { font-size: 0.7rem; color: var(--text-dim); display: block; margin-top: 0.5rem; }
+
+        /* User List */
+        .user-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem; }
+        .user-card {
+            background: var(--surface);
+            padding: 1.25rem;
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .user-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 25px;
+            background: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.25rem;
+        }
+        .user-details h4 { font-size: 0.95rem; }
+        .user-details p { font-size: 0.75rem; color: var(--text-dim); }
+        .status-dot { width: 8px; height: 8px; border-radius: 4px; background: var(--success); display: inline-block; margin-right: 4px; }
+
+        /* Mobile Adjustments */
+        @media (max-width: 600px) {
+            .grid-stats { grid-template-columns: 1fr; }
+            .item-meta { display: none; }
+        }
+
+        .loader-wrap { text-align: center; padding: 4rem 0; color: var(--text-dim); }
+        .spinner {
+            width: 30px;
+            height: 30px;
+            border: 3px solid var(--border);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            margin: 0 auto 1rem;
+            animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+
+<nav>
+    <div class="logo">🚀 PK<span>AutomateX</span></div>
+    <div class="nav-actions">
+        <button class="btn-icon" onclick="fetchData()">🔄</button>
+    </div>
+</nav>
+
+<div class="container">
+    <div id="notif-banner" onclick="requestNotif()">
+        🔔 Enable Real-Time Admin Alerts
+    </div>
+
+    <div class="grid-stats">
+        <div class="stat-card">
+            <small>Total Operations</small>
+            <div id="stat-reports">-</div>
+        </div>
+        <div class="stat-card">
+            <small>Active Licenses</small>
+            <div id="stat-users">-</div>
+        </div>
+        <div class="stat-card">
+            <small>Total SKUs</small>
+            <div id="stat-skus">-</div>
+        </div>
+    </div>
+
+    <div class="tabs">
+        <button class="tab-btn active" onclick="showTab('activity')">Activity Feed</button>
+        <button class="tab-btn" onclick="showTab('users')">Manage Users</button>
+        <button class="tab-btn" onclick="showTab('analytics')">System Analytics</button>
+    </div>
+
+    <!-- Activity Section -->
+    <section id="tab-activity" class="content-section active">
+        <div id="activity-list" class="card-list">
+            <div class="loader-wrap"><div class="spinner"></div><p>Syncing Live Data...</p></div>
+        </div>
+    </section>
+
+    <!-- Users Section -->
+    <section id="tab-users" class="content-section">
+        <div id="user-list" class="user-grid"></div>
+    </section>
+
+    <!-- Analytics Section -->
+    <section id="tab-analytics" class="content-section">
+        <div class="stat-card" style="text-align: center; padding: 4rem 0;">
+            <p color="var(--text-dim)">Advanced Analytics coming soon...</p>
+        </div>
+    </section>
+</div>
+
+<audio id="notif-sound" src="https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3"></audio>
+
+<script>
+    const LICENSES_GIST = '55b7d332055b2a2715cfea29ea4fd1d7';
+    const REPORTS_GIST = 'df53c4543de477bc107fde0f605e0dc1';
+    let lastReportId = null;
+
+    function showTab(tabId) {
+        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+        document.querySelector(`.tab-btn[onclick="showTab('${tabId}')"]`).classList.add('active');
+        document.querySelectorAll('.content-section').forEach(sec => sec.classList.remove('active'));
+        document.getElementById(`tab-${tabId}`).classList.add('active');
+    }
+
+    function requestNotif() {
+        Notification.requestPermission().then(perm => {
+            if (perm === 'granted') document.getElementById('notif-banner').style.display = 'none';
+        });
+    }
+
+    if (Notification.permission !== 'granted') document.getElementById('notif-banner').style.display = 'block';
+
+    async function fetchData() {
+        try {
+            // Fetch both gists
+            const [lResp, rResp] = await Promise.all([
+                fetch(`https://api.github.com/gists/${LICENSES_GIST}?t=${Date.now()}`),
+                fetch(`https://api.github.com/gists/${REPORTS_GIST}?t=${Date.now()}`)
+            ]);
+
+            const lGist = await lResp.json();
+            const rGist = await rResp.json();
+
+            const lData = JSON.parse(Object.values(lGist.files)[0].content);
+            const rData = JSON.parse(Object.values(rGist.files)[0].content);
+
+            renderDashboard(lData, rData);
+        } catch (e) {
+            console.error("Fetch Error:", e);
+        }
+    }
+
+    function renderDashboard(lData, rData) {
+        const reports = rData.reports || [];
+        const users = lData.authorized || {};
+        
+        // Update Stats
+        document.getElementById('stat-reports').innerText = reports.length;
+        document.getElementById('stat-users').innerText = Object.keys(users).length;
+        document.getElementById('stat-skus').innerText = reports.reduce((acc, curr) => acc + (parseInt(curr.skus) || 0), 0);
+
+        // Notify for new report
+        if (reports.length > 0) {
+            const latest = reports[reports.length - 1];
+            if (lastReportId && latest.id !== lastReportId) {
+                new Notification("🚀 New Activity", { body: `${latest.user} processed ${latest.module}` });
+                document.getElementById('notif-sound').play().catch(e => {});
+            }
+            lastReportId = latest.id;
+        }
+
+        // Render Activity Feed
+        const actList = document.getElementById('activity-list');
+        actList.innerHTML = reports.slice().reverse().map(r => `
+            <div class="item-card">
+                <div class="icon-circle">${getIcon(r.module)}</div>
+                <div class="item-info">
+                    <h4>${r.module}</h4>
+                    <p>${r.file}</p>
+                    <p style="font-size: 0.7rem;">👤 User: <strong>${r.user}</strong></p>
+                </div>
+                <div class="item-meta">
+                    <span class="badge">📦 ${r.skus} SKUs</span>
+                    <span class="time">${r.time}</span>
+                </div>
+            </div>
+        `).join('');
+
+        // Render User List
+        const userList = document.getElementById('user-list');
+        userList.innerHTML = Object.entries(users).map(([hwid, info]) => `
+            <div class="user-card">
+                <div class="user-avatar">${info.name[0]}</div>
+                <div class="user-details">
+                    <h4>${info.name}</h4>
+                    <p><span class="status-dot"></span> Authorized</p>
+                    <p style="font-size: 0.65rem; color: var(--text-dim); margin-top: 4px;">HWID: ${hwid}</p>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    function getIcon(module) {
+        if (module.includes("New IN")) return "📦";
+        if (module.includes("Qogita")) return "📊";
+        if (module.includes("Weekly")) return "🗓️";
+        return "⚙️";
+    }
+
+    fetchData();
+    setInterval(fetchData, 15000);
+</script>
+
+</body>
+</html>
